@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <title>家庭账单</title>
+    <link rel="stylesheet" href="js/system/jq/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="js/system/jq/theme-classic.css">
+    <style>
+        #home:after { background: url("img/home.png") 50% 50% no-repeat; background-size: 24px 24px;
+        }
+        #detail:after { background: url("img/detail.png") 50% 50% no-repeat; background-size: 24px
+        24px; }
+        #analy:after { background: url("img/analy.png") 50% 50% no-repeat; background-size: 24px
+        24px; }
+        #backup:after { background: url("img/backup.png") 50% 50% no-repeat; background-size: 24px
+        24px; }
+    </style>
+</head>
+<body>
+<div data-role="page" id="testpage" data-theme="b">
+    <div data-role="header" data-position="fixed">
+        <h2>本月消费</h2>
+        <a href="#"
+           class="ui-btn ui-corner-all ui-btn-inline ui-mini footer-button-left ui-btn-icon-left ui-icon-carat-l">上月</a>
+        <a href="#"
+           class="ui-btn ui-corner-all ui-btn-inline ui-mini footer-button-right ui-btn-icon-right ui-icon-carat-r">下月</a>
+    </div>
+
+    <div data-role="content">
+        <ul data-role="listview" id="listview">
+        </ul>
+    </div>
+    <!-- /content -->
+
+    <div data-role="footer" class="nav-glyphish-example" data-position="fixed">
+        <div data-role="navbar" class="nav-glyphish-example" data-grid="c">
+            <ul>
+                <li><a href="#" id="home" data-icon="custom" class="ui-btn-active">首 页</a></li>
+                <li><a href="#" id="detail" data-icon="custom">明 细</a></li>
+                <li><a href="#" id="analy" data-icon="custom">统 计</a></li>
+                <li><a href="#" id="backup" data-icon="custom">备 份</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="js/system/jq/jquery.min.js"></script>
+<script type="text/javascript" src="js/system/jq/jquery.mobile-1.4.5.min.js"></script>
+<script type="text/javascript" src="js/system/jq/plugin.js"></script>
+<script type="text/javascript" src="js/page/index.js"></script>
