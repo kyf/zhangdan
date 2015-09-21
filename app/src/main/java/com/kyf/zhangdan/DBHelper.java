@@ -1,10 +1,10 @@
 package com.kyf.zhangdan;
 
-import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
+import android.util.Log;
 
 
 /**
@@ -21,8 +21,9 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public void onCreate(SQLiteDatabase db){
-        String sql = "create table `paylist`(`id` integer primary key, `number` varchar(250), `title` varchar(250), `date` int(10), `note` text)";
+        String sql = "create table `paylist`(`id` integer primary key, `number` varchar(250), `title` varchar(250), `date` int(16), `note` text)";
         db.execSQL(sql);
+
         sql = "create table `appglobal`(`id` integer primary key, `isfirst` tinyint(1))";
         db.execSQL(sql);
         if(this.db == null){

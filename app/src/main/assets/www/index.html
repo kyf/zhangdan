@@ -16,6 +16,8 @@
         24px; }
         #backup:after { background: url("img/backup.png") 50% 50% no-repeat; background-size: 24px
         24px; }
+        #setting:after { background: url("img/setting.png") 50% 50% no-repeat; background-size: 24px
+        24px; }
     </style>
 </head>
 <body>
@@ -29,18 +31,20 @@
     </div>
 
     <div data-role="content">
-        <ul data-role="listview" id="listview">
-        </ul>
+        <div style="height:310px;font-size:60px;font-weight:bold;text-align:center;line-height:310px;color:green;">
+            ￥  <span id="PayLabel"></span>
+        </div>
+        <input type="button" value="添加一笔"  />
     </div>
     <!-- /content -->
 
     <div data-role="footer" class="nav-glyphish-example" data-position="fixed">
         <div data-role="navbar" class="nav-glyphish-example" data-grid="c">
             <ul>
-                <li><a href="#" id="home" data-icon="custom" class="ui-btn-active">首 页</a></li>
-                <li><a href="#" id="detail" data-icon="custom">明 细</a></li>
-                <li><a href="#" id="analy" data-icon="custom">统 计</a></li>
-                <li><a href="#" id="backup" data-icon="custom">备 份</a></li>
+                <li><a href="index.html" id="home" data-icon="custom" class="ui-btn-active">首 页</a></li>
+                <li><a href="detail.html" rel="external" id="detail" data-icon="custom">明 细</a></li>
+                <li><a href="analy.html" rel="external" id="analy" data-icon="custom">统 计</a></li>
+                <li><a href="#" id="setting" data-icon="custom">设 置</a></li>
             </ul>
         </div>
     </div>
@@ -50,4 +54,5 @@
 <script type="text/javascript" src="js/system/jq/jquery.min.js"></script>
 <script type="text/javascript" src="js/system/jq/jquery.mobile-1.4.5.min.js"></script>
 <script type="text/javascript" src="js/system/jq/plugin.js"></script>
+<script type="text/javascript" src="js/page/util.js"></script>
 <script type="text/javascript" src="js/page/index.js"></script>

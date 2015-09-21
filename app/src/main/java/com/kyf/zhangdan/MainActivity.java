@@ -2,7 +2,9 @@ package com.kyf.zhangdan;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -61,6 +63,22 @@ public class MainActivity extends Activity {
             }
         });
         mainView.loadUrl("file:///android_asset/www/index.html");
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent e){
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            if(mainView.canGoBack()){
+                mainView.goBack();
+            }else{
+                Intent home = new Intent(Intent.ACTION_MAIN);
+                home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                home.addCategory(Intent.CATEGORY_HOME);
+                startActivity(home);
+            }
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, e);
     }
 
 }

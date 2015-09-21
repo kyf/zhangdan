@@ -11,7 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,22 +37,24 @@ public class Utils {
         if (null == cur) return result;
 
         while (cur.moveToNext()) {
-            String date = cur.getString(cur.getColumnIndex("date"));//手机号
+            long date = cur.getLong(cur.getColumnIndex("date"));
             String body = cur.getString(cur.getColumnIndex("body"));
 
             Map<String, String> item = new HashMap<String, String>();
 
             Pattern pattern = Pattern.compile("^您账户[0-9]{4}于[0-9]{2}月[0-9]{2}日[0-9]{2}:[0-9]{2}.*人民币([0-9\\.]+)");
             Matcher matcher = pattern.matcher(body);
+
             if (matcher.find()) {
-                String paynumber = matcher.group();
-                item.put("date", date);
+                String paynumber = matcher.group(1);
+                item.put("date", date + "");
                 item.put("number", paynumber);
                 item.put("body", body);
                 result.add(item);
-                Log.e("***************zhangdan", "" + paynumber);
             }
         }
+
+
 
         return result;
     }
