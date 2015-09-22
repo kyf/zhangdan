@@ -1,5 +1,6 @@
 $(document).ready(function(){
-
+    var JSM;
+    var CurrentDateLabel = $('#CurrentDateLabel');
     var loadingfn = function(){
       $.mobile.loading('show', {
               text : '加载中...',
@@ -25,15 +26,25 @@ $(document).ready(function(){
                            data = JSON.parse(data);
                            var total = 0;
                            $.each(data, function(index, it){
-                                total += parseInt(it.number, 10);
+                                total += parseFloat(it.number);
                            });
-                           PayLabel.text(total);
+
+                           total = Math.round(total * 100)/100;
+                           PayLabel.text(total + "");
                            $.mobile.loading('hide');
                        }
 
+    var changeDate = function(flag){
+        loadingfn();
+        JSM.changeDate(flag);
+        showDatafn();
+        CurrentDateLabel.text(JSM.getCurrentDate());
+    }
+
     loadingfn();
     if(typeof JavaScriptMethods != 'undefined'){
-        var JSM = JavaScriptMethods;
+        JSM = JavaScriptMethods;
+        CurrentDateLabel.text(JSM.getCurrentDate());
         if(JSM.isFirst() && JSM.getSizeSMS() > 0){
             $.mobile.loading('hide');
             setTimeout(function(){
@@ -47,6 +58,24 @@ $(document).ready(function(){
         }else{
             showDatafn();
         }
+
+        var NextBt = $('#NextBt'), PrevBt = $('#PrevBt');
+        NextBt.click(function(){
+            changeDate(1);
+        });
+        PrevBt.click(function(){
+            changeDate(0);
+        });
+
+        var content = $('#content');
+        content.on("swipeleft",function(){
+             changeDate(1);
+        });
+
+        content.on("swiperight",function(){
+             changeDate(0);
+        });
+
     }
 });
 

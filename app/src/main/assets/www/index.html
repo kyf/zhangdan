@@ -23,18 +23,18 @@
 <body>
 <div data-role="page" id="testpage" data-theme="b">
     <div data-role="header" data-position="fixed">
-        <h2>本月消费</h2>
+        <h2><span id="CurrentDateLabel"></span></h2>
         <a href="#"
-           class="ui-btn ui-corner-all ui-btn-inline ui-mini footer-button-left ui-btn-icon-left ui-icon-carat-l">上月</a>
+           class="ui-btn ui-corner-all ui-btn-inline ui-mini footer-button-left ui-btn-icon-left ui-icon-carat-l" id="PrevBt">上月</a>
         <a href="#"
-           class="ui-btn ui-corner-all ui-btn-inline ui-mini footer-button-right ui-btn-icon-right ui-icon-carat-r">下月</a>
+           class="ui-btn ui-corner-all ui-btn-inline ui-mini footer-button-right ui-btn-icon-right ui-icon-carat-r" id="NextBt">下月</a>
     </div>
 
-    <div data-role="content">
-        <div style="height:310px;font-size:60px;font-weight:bold;text-align:center;line-height:310px;color:green;">
+    <div data-role="content" id="content">
+        <div style="height:310px;font-size:50px;font-weight:bold;text-align:center;line-height:310px;color:green;">
             ￥  <span id="PayLabel"></span>
         </div>
-        <input type="button" value="添加一笔"  />
+        <a class="ui-btn ui-corner-all" href="add.html" rel="external" > 添加一笔</a>
     </div>
     <!-- /content -->
 

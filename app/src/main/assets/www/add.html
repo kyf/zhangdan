@@ -19,14 +19,19 @@
     </div>
 
     <div data-role="content">
-        <div data-role="listview" id="listview"></div>
+        <div>
+            用途：<input type="text" id="title" placeholder="支出用途" />
+            日期：<input type="datetime-local" id="datebt" placeholder="支出日期" />
+            金额：<input type="number" id="paynumber" placeholder="支出金额" />
+            备注：<textarea id="note" placeholder="相关备注" style="margin-bottom:30px;" ></textarea>
+            <input type="button" value="提 交" id="submitbt" />
+        </div>
     </div>
-    <!-- /content -->
+
 </div>
 </body>
 </html>
 <script type="text/javascript" src="js/system/jq/jquery.min.js"></script>
 <script type="text/javascript" src="js/system/jq/jquery.mobile-1.4.5.min.js"></script>
 <script type="text/javascript" src="js/page/util.js"></script>
-<script type="text/javascript" src="js/highcharts/highcharts.js"></script>
-<script type="text/javascript" src="js/page/analy.js"></script>
+<script type="text/javascript" src="js/page/add.js"></script>

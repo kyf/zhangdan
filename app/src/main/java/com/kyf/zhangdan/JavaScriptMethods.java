@@ -41,17 +41,17 @@ public class JavaScriptMethods {
     }
 
     @JavascriptInterface
-    public String getCurrentDate(){
+    public String getCurrentDate() {
         return CurrentYear + "年" + CurrentMonth + "月";
     }
 
     @JavascriptInterface
-    public int getCurrentYear(){
+    public int getCurrentYear() {
         return CurrentYear;
     }
 
     @JavascriptInterface
-    public int getCurrentMonth(){
+    public int getCurrentMonth() {
         return CurrentMonth;
     }
 
@@ -61,28 +61,46 @@ public class JavaScriptMethods {
     }
 
     @JavascriptInterface
+    public void changeDate(int flag) {
+        if (flag > 0) {
+            CurrentMonth++;
+            if (CurrentMonth > 12) {
+                CurrentMonth = 1;
+                CurrentYear++;
+            }
+        } else {
+            CurrentMonth--;
+            if (CurrentMonth < 1) {
+                CurrentMonth = 12;
+                CurrentYear--;
+            }
+        }
+    }
+
+    @JavascriptInterface
     public String getDataFromNative(long begin, long end) {
-        String sql = "select `number`, `date`, `note`, `title` from `paylist` where `date` >=" + begin + " and `date` < " + end;
+        String sql = "select `id`, `number`, `date`, `note`, `title` from `paylist` where `date` >=" + begin + " and `date` < " + end + " order by date desc";
 
         Cursor data = DBHelper.query(sql);
         data.moveToFirst();
         List<Map<String, String>> ds = new ArrayList<Map<String, String>>();
         int size = data.getCount();
-        while(true){
-            if(size == 0)break;
+        while (true) {
+            if (size == 0) break;
             Map<String, String> it = new HashMap<String, String>();
             it.put("number", data.getString(data.getColumnIndex("number")));
+            it.put("id", data.getString(data.getColumnIndex("id")));
 
             String title = data.getString(data.getColumnIndex("title"));
 
-            if(title == null || title.equals("")){
+            if (title == null || title.equals("")) {
                 title = "[暂未添加]";
             }
 
             it.put("title", title);
 
             long date = data.getLong(data.getColumnIndex("date"));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date d = new Date(date);
             String strDate = dateFormat.format(d);
             it.put("date", strDate);
@@ -90,7 +108,7 @@ public class JavaScriptMethods {
             ds.add(it);
 
             boolean state = data.moveToNext();
-            if(!state)break;
+            if (!state) break;
         }
 
         JSONArray json = new JSONArray(ds);
@@ -112,8 +130,15 @@ public class JavaScriptMethods {
         return true;
     }
 
+
     @JavascriptInterface
-    public int getSizeSMS(){
+    public void deleteDetail(String id){
+        String sql = "delete from `paylist` where id = " + id;
+        DBHelper.execute(sql);
+    }
+
+    @JavascriptInterface
+    public int getSizeSMS() {
         smslist = Utils.getSMS(mContext);
         return smslist.size();
     }
@@ -121,19 +146,26 @@ public class JavaScriptMethods {
 
     @JavascriptInterface
     public void importSMS() {
-        if(smslist == null) return;
+        if (smslist == null) return;
         List<Map<String, String>> data = smslist;
 
-        for(Map<String, String> it : data){
+        for (Map<String, String> it : data) {
             String number = it.get("number");
             String date = it.get("date");
             String body = it.get("body");
-            DBHelper.execute("insert into `paylist`(`number`, `date`, `note`) values('"+number+"', " + date + ", '" + body + "')");
+            DBHelper.execute("insert into `paylist`(`number`, `date`, `note`) values('" + number + "', " + date + ", '" + body + "')");
         }
     }
 
     @JavascriptInterface
-    public void updateIsFirst(){
+    public void addPay(String title, String date, String number, String note){
+        String sql = "insert into `paylist`(`number`, `date`, `note`, `title`) values('" + number + "', " + date + ", '" + note + "', '" + title + "')";
+        DBHelper.execute(sql);
+    }
+
+
+    @JavascriptInterface
+    public void updateIsFirst() {
         DBHelper.execute("insert into `appglobal`(`isfirst`) values(1)");
     }
 }

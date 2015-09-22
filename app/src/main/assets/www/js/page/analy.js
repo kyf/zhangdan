@@ -11,6 +11,7 @@ $(document).ready(function(){
     var loadDatafn = function(){
         var dataset = $('#listview');
         var date = new Date();
+
         var begin = human2unix(JSM.getCurrentYear(), JSM.getCurrentMonth(), 1, 0, 0, 0) * 1000;
         var end = human2unix(JSM.getCurrentYear(), JSM.getCurrentMonth() + 1, 1, 0, 0, 0) * 1000;
         var data = JSM.getDataFromNative(begin, end);
@@ -23,29 +24,71 @@ $(document).ready(function(){
 
         data = JSON.parse(data);
 
-        $.each(data, function(index, it){
+        var categories = [], datalist = [];
 
+        $.each(new Array(31), function(i){
+            categories.push(i + 1);
+            datalist.push(0);
         });
 
-        dataset.highcharts({                   //图表展示容器，与div的id保持一致
-                chart: {
-                    type: 'column'                         //指定图表的类型，默认是折线图（line）
-                },
-                title: {
-                    text: '本月消费统计'      //指定图表标题
-                },
-                xAxis: {
-                    categories: [1, 2, 3, 4, 5, 6, 7]   //指定x轴分组
-                },
-                yAxis: {
-                    title: {
-                        text: '消费金额'                  //指定y轴的标题
-                    }
-                },
-                series: [{
-                    data: [500, 270, 316, 270, 590, 109, 2000]
-                }]
-            });
+        $.each(data, function(index, it){
+            var d = formatDate(it.date);
+            var day = d.getDate();
+            datalist[day] = datalist[day] + parseFloat(it.number);
+            datalist[day] = Math.round(datalist[day] * 100) / 100;
+        });
+
+        dataset.highcharts({
+                                   chart: {
+                                       height:575,
+                                       type: 'bar'
+                                   },
+                                   title: {
+                                       text: '本月消费统计图'
+                                   },
+                                   xAxis: {
+                                       categories: categories
+                                   },
+                                   yAxis: {
+                                       min: 0,
+                                       title: {
+                                           text: '金额(元)',
+                                           align: 'high'
+                                       },
+                                       labels: {
+                                           overflow: 'justify'
+                                       }
+                                   },
+                                   tooltip: {
+                                       valueSuffix: ' 元'
+                                   },
+                                   plotOptions: {
+                                       bar: {
+                                           dataLabels: {
+                                               enabled: true
+                                           }
+                                       }
+                                   },
+                                   legend: {
+                                       layout: 'horizontal',
+                                       align: 'right',
+                                       verticalAlign: 'top',
+                                       x: -40,
+                                       y: 100,
+                                       enabled:false,
+                                       floating: true,
+                                       borderWidth: 1,
+                                       backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                                       shadow: true
+                                   },
+                                   credits: {
+                                       enabled: false
+                                   },
+                                   series: [{
+                                       name: '消费额度',
+                                       data: datalist
+                                   }]
+                               });
 
         $.mobile.loading('hide');
     }

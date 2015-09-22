@@ -21,3 +21,19 @@ function unix2human(unixTimeStamp)   {
     second=second<10?"0"+second:second;
     return year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
 }
+
+function formatDate(dateStr){
+    var list = dateStr.split(' ');
+    var d = list[0];
+    var t = list[1];
+    var ds = d.split('-');
+    var ts = t.split(':');
+    var date = new Date(Date.UTC(ds[0], (ds[1]-1), ds[2], ts[0], ts[1], ts[2]));
+    return date;
+}
+
+function str2unix(str){
+    var d = formatDate(str);
+    var unixTimeStamp=d.getTime()/1000 - 8*60*60;
+    return unixTimeStamp;
+}

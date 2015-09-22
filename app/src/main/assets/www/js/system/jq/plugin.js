@@ -31,3 +31,31 @@ function confirmJQM(text, callback) {
      });
 
 }
+
+function oplist(id, callback){
+     var popupDialogId = 'popupDialog';
+     $('<div data-role="popup" id="'+popupDialogId+'" data-confirmed="no" data-transition="pop" data-overlay-theme="b" data-theme="b" data-dismissible="true" style="max-width:500px;">\
+                <ul data-role="listview" data-inset="true" style="min-width:230px;">\
+                    <li><a href="#" class="opedit" data-rel="back">编 辑</a></li>\
+                    <li><a href="#" class="opdelete" data-rel="back">删 除</a></li>\
+                </ul>\
+            </div>').appendTo($.mobile.pageContainer);
+     var popupDialogObj = $('#' + popupDialogId);
+     popupDialogObj.trigger('create');
+     popupDialogObj.popup({
+         afterclose: function (event, ui) {
+             popupDialogObj.find(".opdelete").first().off('click');
+             var isDeleted = popupDialogObj.attr('data-delete-confirmed') === 'yes' ? true : false;
+             $(event.target).remove();
+             if (isDeleted) {
+                 JavaScriptMethods.deleteDetail(id);
+                 if(callback)callback();
+             }
+         }
+     });
+     popupDialogObj.popup('open');
+     popupDialogObj.find(".opdelete").first().on('click', function () {
+         popupDialogObj.attr('data-delete-confirmed', 'yes');
+     });
+
+}
