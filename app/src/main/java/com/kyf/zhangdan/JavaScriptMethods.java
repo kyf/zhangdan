@@ -7,6 +7,7 @@ import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -138,6 +139,28 @@ public class JavaScriptMethods {
     }
 
     @JavascriptInterface
+    public String getDetail(String id){
+        String sql = "select `title`, `date`, `number`, `note` from `paylist` where id = " + id;
+        Cursor cursor = DBHelper.query(sql);
+        cursor.moveToFirst();
+        if(cursor.getCount() == 0)return "";
+        Map<String, String> result = new HashMap<String, String>();
+        result.put("title", cursor.getString(cursor.getColumnIndex("title")));
+
+        long date = cursor.getLong(cursor.getColumnIndex("date"));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date d = new Date(date);
+        String strDate = dateFormat.format(d);
+        result.put("date", strDate);
+
+        result.put("number", cursor.getString(cursor.getColumnIndex("number")));
+        result.put("note", cursor.getString(cursor.getColumnIndex("note")));
+
+        JSONObject json = new JSONObject(result);
+        return json.toString();
+    }
+
+    @JavascriptInterface
     public int getSizeSMS() {
         smslist = Utils.getSMS(mContext);
         return smslist.size();
@@ -158,8 +181,12 @@ public class JavaScriptMethods {
     }
 
     @JavascriptInterface
-    public void addPay(String title, String date, String number, String note){
+    public void addPay(String title, String date, String number, String note, String id){
         String sql = "insert into `paylist`(`number`, `date`, `note`, `title`) values('" + number + "', " + date + ", '" + note + "', '" + title + "')";
+        if(!id.equals("0")){
+            sql = "update `paylist` set `number` = '"+number+"', `date` = "+date+", `note` = '"+note+"', `title` = '"+title+"' where id = " + id;
+        }
+
         DBHelper.execute(sql);
     }
 

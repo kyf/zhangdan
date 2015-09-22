@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    var JSM;
+    var JSM, ID = 0;
     var loadingfn = function(){
       $.mobile.loading('show', {
               text : '保存中...',
@@ -25,6 +25,21 @@ $(document).ready(function(){
     if(typeof JavaScriptMethods != 'undefined'){
         JSM = JavaScriptMethods;
 
+        var query = window.location.href.split('?');
+        if(query.length > 1){
+            var qd = parseQuery(query[1]);
+            var detail = JSM.getDetail(qd.id);
+            if(detail != ''){
+                ID = qd.id;
+                detail = JSON.parse(detail);
+                var formatstr = detail.date.replace(' ', 'T');
+                title.val(detail.title);
+                datebt.val(formatstr.replace(formatstr.substr(-3), ''));
+                paynumber.val(detail.number);
+                note.val(detail.note);
+            }
+        }
+
         submitbt.click(function(){
             var data = {
                 title : title.val(),
@@ -49,7 +64,7 @@ $(document).ready(function(){
             }
 
             loadingfn();
-            JSM.addPay(data.title, str2unix(data.date) * 1000, data.number, data.note);
+            JSM.addPay(data.title, str2unix(data.date) * 1000, data.number, data.note, ID + '');
             history.go(-1);
         });
 

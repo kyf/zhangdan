@@ -51,11 +51,19 @@ function oplist(id, callback){
                  JavaScriptMethods.deleteDetail(id);
                  if(callback)callback();
              }
+
+             popupDialogObj.find(".opedit").first().off('click');
+             var isEdited = popupDialogObj.attr('data-edit-confirmed') === 'yes' ? true : false;
+             if (isEdited) {
+                 window.location.href = 'add.html?id=' + id;
+             }
          }
      });
      popupDialogObj.popup('open');
      popupDialogObj.find(".opdelete").first().on('click', function () {
          popupDialogObj.attr('data-delete-confirmed', 'yes');
      });
-
+     popupDialogObj.find(".opedit").first().on('click', function () {
+         popupDialogObj.attr('data-edit-confirmed', 'yes');
+     });
 }

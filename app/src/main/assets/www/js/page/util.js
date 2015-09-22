@@ -37,3 +37,15 @@ function str2unix(str){
     var unixTimeStamp=d.getTime()/1000 - 8*60*60;
     return unixTimeStamp;
 }
+
+function parseQuery(q){
+    var list = q.split('&');
+    var result = {};
+    for(var i=0; i<list.length; i++){
+        var it = list[i];
+        var pair = it.split('=');
+        result[pair[0]] = pair[1];
+    }
+
+    return result;
+}
