@@ -1,14 +1,19 @@
 package com.kyf.zhangdan;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RemoteViews;
 
 public class MainActivity extends Activity {
 
@@ -23,6 +28,33 @@ public class MainActivity extends Activity {
 
         myContext = this;
         initWeb();
+        init();
+    }
+
+    private void init(){
+        MySMSReceiver mySMSReceiver = new MySMSReceiver();
+        Log.e("zhangdan", "onInit");
+        mySMSReceiver.setOnReceivedMessageListener(new MySMSReceiver.MessageListener() {
+            @Override
+            public void OnReceived(String message, String sender, String time, long unix_time) {
+                Log.e("zhangdan", "onreceive");
+                //DBHelper.execute("insert into `paylist`(`number`, `date`, `note`) values('" + number + "', " + date + ", '" + body + "')");
+                NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                Notification n = new Notification();
+                n.icon = R.mipmap.ic_launcher;
+                n.tickerText = message;
+                n.when = System.currentTimeMillis();
+                n.flags = Notification.FLAG_AUTO_CANCEL;
+                RemoteViews rv = new RemoteViews(getPackageName(), R.layout.notify);
+                rv.setTextViewText(R.id.text_content, message);
+                n.contentView = rv;
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                PendingIntent contentIntent = PendingIntent.getActivity(myContext, R.string.app_name,
+                        intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                n.contentIntent = contentIntent;
+                nm.notify(R.string.app_name, n);
+            }
+        });
     }
 
     private void initWeb(){

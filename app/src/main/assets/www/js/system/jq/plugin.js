@@ -48,8 +48,10 @@ function oplist(id, callback){
              var isDeleted = popupDialogObj.attr('data-delete-confirmed') === 'yes' ? true : false;
              $(event.target).remove();
              if (isDeleted) {
-                 JavaScriptMethods.deleteDetail(id);
-                 if(callback)callback();
+                 confirmJQM("确认删除该条数据吗？删除后将不可恢复！", function(){
+                      JavaScriptMethods.deleteDetail(id);
+                      if(callback)callback();
+                 });
              }
 
              popupDialogObj.find(".opedit").first().off('click');

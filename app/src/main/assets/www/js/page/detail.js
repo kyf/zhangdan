@@ -44,7 +44,7 @@ $(document).ready(function(){
         CurrentDateLabel.text(JSM.getCurrentDate());
         loadDatafn();
 
-        $('.detail_panel').on('taphold', function(event){
+        $('body').on('taphold', '.detail_panel', function(event){
             event.stopPropagation();
             oplist($(this).attr('myid'), function(){
                 loadingfn();
