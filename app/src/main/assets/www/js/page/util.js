@@ -23,12 +23,7 @@ function unix2human(unixTimeStamp)   {
 }
 
 function formatDate(dateStr){
-    var list = dateStr.split(' ');
-    var d = list[0];
-    var t = list[1];
-    var ds = d.split('-');
-    var ts = t.split(':');
-    var date = new Date(Date.UTC(ds[0], (ds[1]-1), ds[2], ts[0], ts[1], ts[2]));
+    var date = new Date(dateStr.replace('-', '/'));
     return date;
 }
 

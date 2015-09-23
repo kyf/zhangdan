@@ -23,9 +23,7 @@ $(document).ready(function(){
         }
 
         data = JSON.parse(data);
-
         var categories = [], datalist = [];
-
         $.each(new Array(31), function(i){
             categories.push(i + 1);
             datalist.push(0);
@@ -34,6 +32,7 @@ $(document).ready(function(){
         $.each(data, function(index, it){
             var d = formatDate(it.date);
             var day = d.getDate();
+            day = parseInt(day) - 1;
             datalist[day] = datalist[day] + parseFloat(it.number);
             datalist[day] = Math.round(datalist[day] * 100) / 100;
         });
