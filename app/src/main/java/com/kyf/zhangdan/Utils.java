@@ -25,6 +25,19 @@ import java.util.regex.Pattern;
  */
 public class Utils {
 
+    public static String template1 = "^您账户[0-9]{4}于[0-9]{2}月[0-9]{2}日[0-9]{2}:[0-9]{2}.*人民币([0-9\\.]+)";
+
+    public static String getPayNumber(String body){
+        Pattern pattern = Pattern.compile(template1);
+        Matcher matcher = pattern.matcher(body);
+
+        String paynumber = "";
+        if (matcher.find()) {
+            paynumber = matcher.group(1);
+        }
+        return paynumber;
+    }
+
     public static List<Map<String, String>> getSMS(Context context) {
         List<Map<String, String>> result = new ArrayList<Map<String, String>>();
         Uri SMS_INBOX = Uri.parse("content://sms/");
@@ -42,7 +55,7 @@ public class Utils {
 
             Map<String, String> item = new HashMap<String, String>();
 
-            Pattern pattern = Pattern.compile("^您账户[0-9]{4}于[0-9]{2}月[0-9]{2}日[0-9]{2}:[0-9]{2}.*人民币([0-9\\.]+)");
+            Pattern pattern = Pattern.compile(template1);
             Matcher matcher = pattern.matcher(body);
 
             if (matcher.find()) {

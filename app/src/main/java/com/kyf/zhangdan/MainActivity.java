@@ -33,26 +33,27 @@ public class MainActivity extends Activity {
 
     private void init(){
         MySMSReceiver mySMSReceiver = new MySMSReceiver();
-        Log.e("zhangdan", "onInit");
+
         mySMSReceiver.setOnReceivedMessageListener(new MySMSReceiver.MessageListener() {
             @Override
             public void OnReceived(String message, String sender, String time, long unix_time) {
-                Log.e("zhangdan", "onreceive");
-                //DBHelper.execute("insert into `paylist`(`number`, `date`, `note`) values('" + number + "', " + date + ", '" + body + "')");
+                String number = Utils.getPayNumber(message);
+                if(number.equals(""))return;
+                DBHelper.execute("insert into `paylist`(`number`, `date`, `note`) values('" + number + "', " + unix_time + ", '" + message + "')");
                 NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-                Notification n = new Notification();
-                n.icon = R.mipmap.ic_launcher;
-                n.tickerText = message;
-                n.when = System.currentTimeMillis();
-                n.flags = Notification.FLAG_AUTO_CANCEL;
-                RemoteViews rv = new RemoteViews(getPackageName(), R.layout.notify);
-                rv.setTextViewText(R.id.text_content, message);
-                n.contentView = rv;
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                PendingIntent contentIntent = PendingIntent.getActivity(myContext, R.string.app_name,
-                        intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                n.contentIntent = contentIntent;
-                nm.notify(R.string.app_name, n);
+
+                PendingIntent pendingIntent3 = PendingIntent.getActivity(myContext, 0,
+                        new Intent(myContext, MainActivity.class), 0);
+                String title = "新的账单信息";
+                Notification notify3 = new Notification.Builder(myContext)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setTicker(title)
+                        .setContentTitle(title)
+                        .setContentText(message)
+                        .setContentIntent(pendingIntent3).setNumber(1).build();
+
+                notify3.flags |= Notification.FLAG_AUTO_CANCEL;
+                nm.notify(1, notify3);
             }
         });
     }
