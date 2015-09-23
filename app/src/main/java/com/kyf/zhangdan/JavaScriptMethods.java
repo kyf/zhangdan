@@ -100,10 +100,12 @@ public class JavaScriptMethods {
 
             it.put("title", title);
 
+
             long date = data.getLong(data.getColumnIndex("date"));
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date d = new Date(date);
             String strDate = dateFormat.format(d);
+
             it.put("date", strDate);
             it.put("note", data.getString(data.getColumnIndex("note")));
             ds.add(it);

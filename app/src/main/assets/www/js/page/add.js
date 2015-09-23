@@ -64,7 +64,8 @@ $(document).ready(function(){
             }
 
             loadingfn();
-            JSM.addPay(data.title, str2unix(data.date) * 1000, data.number, data.note, ID + '');
+
+            JSM.addPay(data.title, str2unix(data.date) + '000', data.number, data.note, ID + '');
             history.go(-1);
         });
 
