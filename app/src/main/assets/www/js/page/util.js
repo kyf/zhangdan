@@ -1,7 +1,7 @@
 function human2unix(year,month,day,hour,minute,second) {
     //功能：把日期转为unix时间戳
-    var humanDate = new Date(Date.UTC(year, (month-1), day, hour, minute, second));
-    var unixTimeStamp=humanDate.getTime()/1000 - 8*60*60;
+    var humanDate = formatDate(year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second);
+    var unixTimeStamp=humanDate.getTime()/1000;
     return unixTimeStamp;
 }
 
@@ -23,13 +23,13 @@ function unix2human(unixTimeStamp)   {
 }
 
 function formatDate(dateStr){
-    var date = new Date(dateStr.replace('-', '/'));
+    var date = new Date(dateStr.replace(/-/g, '/'));
     return date;
 }
 
 function str2unix(str){
     var d = formatDate(str);
-    var unixTimeStamp=d.getTime()/1000 - 8*60*60;
+    var unixTimeStamp=d.getTime()/1000;
     return unixTimeStamp;
 }
 
