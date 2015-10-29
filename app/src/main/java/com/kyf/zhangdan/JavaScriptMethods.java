@@ -20,6 +20,7 @@ import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -254,7 +255,7 @@ public class JavaScriptMethods {
                 nvp.add(new BasicNameValuePair("body", body));
                 Message message = Message.obtain();
                 try {
-                    post.setEntity(new UrlEncodedFormEntity(nvp));
+                    post.setEntity(new UrlEncodedFormEntity(nvp, HTTP.UTF_8));
                     HttpResponse response = client.execute(post);
                     String content = EntityUtils.toString(response.getEntity());
                     JSONObject jsonObject = new JSONObject(content);
