@@ -59,7 +59,7 @@ $(document).ready(function(){
             showDatafn();
         }
 
-        var NextBt = $('#NextBt'), PrevBt = $('#PrevBt');
+        var NextBt = $('#NextBt'), PrevBt = $('#PrevBt');homebt = $('#home');
         NextBt.click(function(){
             changeDate(1);
         });
@@ -76,6 +76,13 @@ $(document).ready(function(){
              changeDate(0);
         });
 
+        var syncbt = $('#sync');
+        syncbt.on("click", function(){
+            JSM.loading("正在同步数据...");
+            JSM.sync();
+            homebt.click();
+            JSM.dismiss();
+        });
     }
 });
 

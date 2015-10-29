@@ -15,11 +15,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RemoteViews;
 
+import com.kyf.zhangdan.view.MyLoading;
+
 public class MainActivity extends Activity {
 
     private Context myContext;
 
     private WebView mainView;
+
+    public MyLoading myLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         myContext = this;
+        myLoading = new MyLoading(this);
+        myLoading.setContent("正在加载数据...");
+        myLoading.setCanceledOnTouchOutside(false);
+        myLoading.show();
         initWeb();
         init();
     }
@@ -82,7 +90,7 @@ public class MainActivity extends Activity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 if(newProgress == 100){
-
+                    myLoading.dismiss();
                 }
                 super.onProgressChanged(view, newProgress);
             }

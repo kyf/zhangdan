@@ -2,10 +2,25 @@ package com.kyf.zhangdan;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import com.kyf.zhangdan.view.MyLoading;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,6 +31,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 
 /**
@@ -33,12 +49,31 @@ public class JavaScriptMethods {
 
     private static int CurrentDay = 0;
 
+    private MyLoading myLoading;
+
+    Handler myHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            switch(msg.what){
+                case 1001:
+                case 1002:{
+                    Toast.makeText(mContext, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                }
+                case 1003:{
+                    //myLoading.hide();
+                }
+            }
+        }
+    };
+
+
     public JavaScriptMethods(Context context) {
         mContext = context;
         Calendar cal = Calendar.getInstance();
         CurrentYear = cal.get(Calendar.YEAR);
         CurrentMonth = cal.get(Calendar.MONTH) + 1;
         CurrentDay = cal.get(Calendar.DAY_OF_MONTH);
+        myLoading = new MyLoading(mContext);
     }
 
     @JavascriptInterface
@@ -196,5 +231,58 @@ public class JavaScriptMethods {
     @JavascriptInterface
     public void updateIsFirst() {
         DBHelper.execute("insert into `appglobal`(`isfirst`) values(1)");
+    }
+
+    @JavascriptInterface
+    public void sync(){
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                long begin , end ;
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+                calendar.set(getCurrentYear(), getCurrentMonth() - 1, 1, 0, 0, 0);
+                begin = calendar.getTimeInMillis();
+                calendar.set(getCurrentYear(), getCurrentMonth(), 1, 0, 0, 0);
+                end = calendar.getTimeInMillis();
+                String body = getDataFromNative(begin, end);
+                String title = "[" + getCurrentYear() + "年" + getCurrentMonth() + "月]对账单";
+                HttpClient client = new DefaultHttpClient();
+                HttpPost post = new HttpPost("http://im2.6renyou.com:2225/sync");
+                ArrayList<NameValuePair> nvp = new ArrayList<NameValuePair>();
+                nvp.add(new BasicNameValuePair("title", title));
+                nvp.add(new BasicNameValuePair("body", body));
+                Message message = Message.obtain();
+                try {
+                    post.setEntity(new UrlEncodedFormEntity(nvp));
+                    HttpResponse response = client.execute(post);
+                    String content = EntityUtils.toString(response.getEntity());
+                    JSONObject jsonObject = new JSONObject(content);
+                    String msg = jsonObject.getString("msg");
+                    message.what = 1001;
+                    message.obj = msg;
+                }catch(Exception e){
+                    message.what = 1002;
+                    message.obj = e.getMessage();
+                }finally {
+                    myHandler.sendMessage(message);
+                }
+                client.getConnectionManager().shutdown();
+            }
+        }).start();
+    }
+
+    @JavascriptInterface
+    public void loading(String msg){
+        //myLoading.setContent(msg);
+        //myLoading.setCanceledOnTouchOutside(false);
+        //myLoading.show();
+    }
+
+    @JavascriptInterface
+    public void dismiss(){
+        if(myLoading != null && myLoading.isShowing()){
+            //myHandler.sendEmptyMessage(1003);
+        }
     }
 }
